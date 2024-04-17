@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Processor</title>
+  <style>
+    /* Estilos CSS */
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    #fileInput {
+      margin-bottom: 10px;
+    }
+    #status {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>File Processor</h2>
+    <input type="file" id="fileInput" accept=".pdf" multiple>
+    <button onclick="processFiles()">Procesar Archivos</button>
+    <div id="status"></div>
+  </div>
+
+  <script>
+    // Función para procesar los archivos seleccionados
+    async function processFiles() {
+      const files = document.getElementById('fileInput').files;
+      const folderPath = 'C:\\Users\\David.Rodriguez\\OneDrive - GRM Colombia S.A.S\\Escritorio\\OCR PDF\\';
+
+      try {
+        const extension = ".pdf";
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Datos");
+        const worksheet1 = workbook.addWorksheet("Archivos no procesados");
+        worksheet.addRow(["Nombre de Archivo", "Fecha", "Número de Documento", "Ruta de almacenamiento"]);
+        worksheet1.addRow(["Nombre de Archivo"]);
+
+        // Iterar sobre los archivos seleccionados
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          const pdfPath = folderPath + file.name;
+          const dataBuffer = await file.arrayBuffer();
+          const data = await pdf(dataBuffer);
+          const text = data.text;
+
+          // Lógica para extraer fecha y número de documento
+
+          // Si no se pudo extraer el número de documento, agregar el nombre del archivo al libro de Excel de archivos no procesados
+          if (!documentNumber) {
+            worksheet1.addRow([file.name]);
+            console.log(`Archivo no procesado: ${pdfPath}`);
+          } else {
+            // Lógica para crear carpetas y mover archivos
+
+            // Agregar una fila con los datos al libro de Excel
+            worksheet.addRow([file.name, date, documentNumber, pdfPath]);
+            console.log(`PDF procesado: ${pdfPath}`);
+            console.log(`Fecha extraída: ${date}`);
+            console.log(`Número de documento extraído: ${documentNumber}`);
+          }
+        }
+
+        // Guardar el libro de Excel en la ruta especificada
+        const excelFilePath = folderPath + "datos.xlsx";
+        await workbook.xlsx.writeFile(excelFilePath);
+        
+        // Actualizar el estado en la interfaz
+        document.getElementById('status').textContent = "Archivos procesados correctamente. Se ha generado un archivo Excel con los resultados.";
+      } catch (error) {
+        console.error("Error al procesar los archivos:", error);
+        document.getElementById('status').textContent = "Error al procesar los archivos. Consulta la consola para más detalles.";
+      }
+    }
+  </script>
+</body>
+</html>
