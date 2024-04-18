@@ -2,8 +2,8 @@ const fs = require('fs');
 const pdf = require('pdf-parse');
 
 
-//const pdfnumero = '4300060039'
-const pdfnumero = '4300060446'
+const pdfnumero = 'Doc1'
+//const pdfnumero = '4300060040'
 const extension = '.pdf'
 //`C:\\Users\\David.Rodriguez\\OneDrive - GRM Colombia S.A.S\\Escritorio\\OCR PDF\\DOCUMENTOS OCR\\`;
 const pdfPath = `C:\\Users\\David.Rodriguez\\OneDrive - GRM Colombia S.A.S\\Escritorio\\OCR PDF\\DOCUMENTOS OCR\\${pdfnumero}${extension}`;
